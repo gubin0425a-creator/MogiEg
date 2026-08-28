@@ -36,8 +36,8 @@
   <div class="flex h-screen overflow-hidden">
     <aside id="sidebar" class="w-72 bg-dark-card border-r border-dark-border flex flex-col p-3 transition-all duration-300 shrink-0 z-30">
       <div class="flex items-center justify-between pb-3 px-1 pt-1 border-b border-dark-border">
-        <a href="/" class="flex items-center gap-2.5 min-w-0">
-          <img src="static/mascot.png" alt="MogiEgg AI" class="w-9 h-9 rounded-xl object-cover ring-2 ring-brand-500/30 shadow-md shadow-brand-500/10" onerror="this.src='/static/mascot.png'">
+        <a href="#" class="flex items-center gap-2.5 min-w-0">
+          <img src="static/mascot.png" alt="MogiEgg AI" class="w-9 h-9 rounded-xl object-cover ring-2 ring-brand-500/30 shadow-md shadow-brand-500/10" onerror="this.src='static/mascot.png'">
           <div class="flex flex-col">
             <span class="text-base font-bold tracking-tight text-white flex items-center gap-1">
               모기에그 <span class="text-brand-500 font-extrabold">(MogiEgg)</span>
@@ -84,7 +84,7 @@
 
       <div class="mt-auto pt-3 border-t border-dark-border">
         <div onclick="openKeyModal()" class="flex items-center gap-2.5 p-2 rounded-xl bg-dark-surface hover:bg-slate-800/80 border border-dark-border cursor-pointer transition">
-          <img src="static/mascot.png" class="w-8 h-8 rounded-lg object-cover ring-1 ring-brand-500/40" onerror="this.src='/static/mascot.png'">
+          <img src="static/mascot.png" class="w-8 h-8 rounded-lg object-cover ring-1 ring-brand-500/40" onerror="this.src='static/mascot.png'">
           <div class="flex-1 min-w-0">
             <div id="sidebar-user-name" class="text-xs font-bold text-white truncate">크리에이터 규빈</div>
             <div id="sidebar-user-tier" class="text-[10px] text-brand-400 font-medium truncate">Pro Creator · 크레딧 100</div>
@@ -123,7 +123,7 @@
           </button>
           <button onclick="toggleTheme()" class="p-2 rounded-xl text-slate-400 hover:bg-dark-surface hover:text-white transition"><i id="theme-icon" data-lucide="moon" class="w-4 h-4"></i></button>
           <button onclick="openKeyModal()" class="p-2 rounded-xl text-slate-400 hover:bg-dark-surface hover:text-white transition"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
-          <img src="static/mascot.png" class="w-8 h-8 rounded-full ring-2 ring-brand-500/40 object-cover cursor-pointer hover:scale-105 transition" onclick="openKeyModal()" onerror="this.src='/static/mascot.png'">
+          <img src="static/mascot.png" class="w-8 h-8 rounded-full ring-2 ring-brand-500/40 object-cover cursor-pointer hover:scale-105 transition" onclick="openKeyModal()" onerror="this.src='static/mascot.png'">
         </div>
       </header>
 
@@ -134,7 +134,7 @@
               <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> 우리만의 AI 마케팅 스튜디오
             </div>
             <div class="relative flex items-center justify-center my-2">
-              <img src="static/mascot.png" class="w-20 h-20 rounded-2xl ring-4 ring-brand-500/30 shadow-2xl shadow-brand-500/20 object-cover" onerror="this.src='/static/mascot.png'">
+              <img src="static/mascot.png" class="w-20 h-20 rounded-2xl ring-4 ring-brand-500/30 shadow-2xl shadow-brand-500/20 object-cover" onerror="this.src='static/mascot.png'">
             </div>
             <h1 class="text-3xl md:text-4xl font-extrabold text-white mt-3 text-center tracking-tight">모기에그 <span class="text-brand-400">(MogiEgg)</span></h1>
             <p class="mt-2 text-sm text-slate-400 text-center max-w-md">유튜브 채널 분석, 3초 훅 숏폼 대본 생성, 멀티 플랫폼 마케팅 자동화까지</p>
@@ -411,9 +411,9 @@
       const div = document.createElement('div');
       div.className = role === 'user' ? 'flex justify-end gap-3' : 'flex justify-start gap-3';
       if (role === 'user') {
-        div.innerHTML = `<div class="max-w-[80%] bg-brand-500 text-dark-bg font-medium text-xs md:text-sm px-4 py-3 rounded-2xl rounded-tr-none shadow-md">${content}</div><img src="static/mascot.png" class="w-8 h-8 rounded-xl object-cover ring-1 ring-brand-500/30 shrink-0" onerror="this.src='/static/mascot.png'">`;
+        div.innerHTML = `<div class="max-w-[80%] bg-brand-500 text-dark-bg font-medium text-xs md:text-sm px-4 py-3 rounded-2xl rounded-tr-none shadow-md">${content}</div><img src="static/mascot.png" class="w-8 h-8 rounded-xl object-cover ring-1 ring-brand-500/30 shrink-0" onerror="this.src='static/mascot.png'">`;
       } else {
-        div.innerHTML = `<img src="static/mascot.png" class="w-8 h-8 rounded-xl object-cover ring-1 ring-brand-500/30 shrink-0" onerror="this.src='/static/mascot.png'"><div class="max-w-[85%] bg-dark-card border border-dark-border text-xs md:text-sm text-slate-200 px-4 py-3.5 rounded-2xl rounded-tl-none shadow-md prose prose-invert leading-relaxed" ${msgId ? `id="${msgId}"` : ''}>${content ? marked.parse(content) : '<div class="flex items-center gap-2 text-brand-400 font-semibold"><span class="w-2 h-2 rounded-full bg-brand-400 animate-ping"></span>생각 중...</div>'}</div>`;
+        div.innerHTML = `<img src="static/mascot.png" class="w-8 h-8 rounded-xl object-cover ring-1 ring-brand-500/30 shrink-0" onerror="this.src='static/mascot.png'"><div class="max-w-[85%] bg-dark-card border border-dark-border text-xs md:text-sm text-slate-200 px-4 py-3.5 rounded-2xl rounded-tl-none shadow-md prose prose-invert leading-relaxed" ${msgId ? `id="${msgId}"` : ''}>${content ? marked.parse(content) : '<div class="flex items-center gap-2 text-brand-400 font-semibold"><span class="w-2 h-2 rounded-full bg-brand-400 animate-ping"></span>생각 중...</div>'}</div>`;
       }
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;

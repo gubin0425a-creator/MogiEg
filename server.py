@@ -8,13 +8,20 @@ MogiEgg — 정적 스튜디오 로컬 서버 (표준 라이브러리만 사용)
 
 별도 의존성 없이 실행 가능합니다:
     python server.py
+
+데스크톱 프로그램(gui.py)에서도 create_server() 를 재사용합니다.
 """
 import os
 import sys
 import http.server
 import socketserver
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# PyInstaller(frozen) 실행 시 리소스는 sys._MEIPASS 에 풀려 있음
+if getattr(sys, 'frozen', False):
+    BASE_DIR = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 
@@ -71,15 +78,21 @@ class MogiEggHandler(http.server.BaseHTTPRequestHandler):
         sys.stderr.write("[MogiEgg] %s\n" % (fmt % args))
 
 
+def create_server(host='0.0.0.0', port=None):
+    """서버 객체를 생성해 반환 (실행은 호출자가 스레드 등으로 처리)."""
+    if port is None:
+        port = int(os.environ.get('PORT', 8501))
+    return socketserver.ThreadingTCPServer((host, int(port)), MogiEggHandler)
+
+
 def main():
-    port = int(os.environ.get('PORT', 8501))
-    handler = MogiEggHandler
-    with socketserver.ThreadingTCPServer(('0.0.0.0', port), handler) as httpd:
-        print(f'🥚 MogiEgg 스튜디오 실행 중 -> http://localhost:{port}')
-        try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            print('\n서버를 종료합니다.')
+    httpd = create_server('0.0.0.0')
+    port = httpd.server_address[1]
+    print(f'🥚 MogiEgg 스튜디오 실행 중 -> http://localhost:{port}')
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print('\n서버를 종료합니다.')
 
 
 if __name__ == '__main__':

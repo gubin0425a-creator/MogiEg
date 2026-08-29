@@ -232,9 +232,17 @@
           <div class="flex items-center justify-between mb-2">
             <div>
               <h2 class="text-xl font-bold text-white">📰 대량생산 카드뉴스 팩토리</h2>
-              <p class="text-xs text-slate-400 mt-1">공신력(공공·공식) 통계만 사용 · 40~60대 공감 정보성 카드 1장 = 세로(9:16) MP4 1개 · 원클릭 일괄 생성</p>
+              <p class="text-xs text-slate-400 mt-1">공신력(공공·공식) 통계만 사용 · 40~60대 공감 <b class="text-fuchsia-300">S/A/B/C 티어리스트</b> · <b class="text-amber-300">4초 리빌(줄 순차 등장)</b> 영상 · 한글 깨짐 자동 검증</p>
             </div>
             <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold shrink-0">✓ 팩트체크: 검증 데이터만</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 text-[11px]">
+            <span class="text-slate-500 font-semibold">기존 기능 바로가기:</span>
+            <button onclick="switchTab('youtube')" class="px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border hover:border-red-500/40 text-slate-300 transition flex items-center gap-1.5"><i data-lucide="youtube" class="w-3.5 h-3.5 text-red-400"></i>유튜브 & SNS 분석</button>
+            <button onclick="switchTab('shortform')" class="px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border hover:border-amber-500/40 text-slate-300 transition flex items-center gap-1.5"><i data-lucide="clapperboard" class="w-3.5 h-3.5 text-amber-400"></i>3초 훅 숏폼</button>
+            <button onclick="switchTab('skills')" class="px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border hover:border-cyan-500/40 text-slate-300 transition flex items-center gap-1.5"><i data-lucide="boxes" class="w-3.5 h-3.5 text-cyan-400"></i>80+ 스킬</button>
+            <button onclick="switchTab('chat')" class="px-3 py-1.5 rounded-lg bg-dark-surface border border-dark-border hover:border-brand-500/40 text-slate-300 transition flex items-center gap-1.5"><i data-lucide="message-square" class="w-3.5 h-3.5 text-brand-400"></i>AI 마케팅 채팅</button>
           </div>
 
           <div class="rounded-2xl bg-dark-card border border-dark-border p-5 space-y-4">
@@ -253,11 +261,11 @@
               </div>
               <div>
                 <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">영상 길이(초)</label>
-                <input id="mp-duration" type="number" min="3" max="60" value="10" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-fuchsia-500/60">
+                <input id="mp-duration" type="number" min="3" max="60" value="4" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-fuchsia-500/60">
               </div>
               <div>
                 <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">촬영 방식</label>
-                <div class="px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-slate-300">정지 카드 (효과 없음)</div>
+                <div class="px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-slate-300">줄 순차 등장(리빌)</div>
               </div>
               <div>
                 <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">해상도</label>
@@ -269,6 +277,7 @@
               <button onclick="mpRenderAll()" id="mp-render-btn" class="px-4 py-2.5 rounded-xl bg-fuchsia-500 hover:bg-fuchsia-600 text-xs font-bold text-white transition flex items-center gap-2"><i data-lucide="clapperboard" class="w-4 h-4"></i>2) 전체 생성 (PNG+MP4)</button>
               <button onclick="mpMakeSchedule()" id="mp-sched-btn" class="px-4 py-2.5 rounded-xl bg-dark-surface border border-dark-border hover:border-emerald-500/50 text-xs font-bold text-white transition flex items-center gap-2"><i data-lucide="calendar-clock" class="w-4 h-4 text-emerald-400"></i>3) 업로드 일정표</button>
               <button onclick="mpDownloadZip()" id="mp-zip-btn" class="px-4 py-2.5 rounded-xl bg-dark-surface border border-dark-border hover:border-blue-500/50 text-xs font-bold text-white transition flex items-center gap-2 hidden"><i data-lucide="archive" class="w-4 h-4 text-blue-400"></i>ZIP 다운로드</button>
+              <button onclick="mpRegenerateFailed()" id="mp-retry-btn" class="px-4 py-2.5 rounded-xl bg-red-500/15 border border-red-500/40 hover:bg-red-500/25 text-red-300 text-xs font-bold transition flex items-center gap-2 hidden"><i data-lucide="refresh-cw" class="w-4 h-4"></i>탈락 재생성</button>
             </div>
             <div id="mp-progress" class="hidden">
               <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5"><span id="mp-progress-label">준비 중...</span><span id="mp-progress-pct">0%</span></div>
@@ -289,13 +298,30 @@
 
           <div id="mp-sched-wrap" class="rounded-2xl bg-dark-card border border-dark-border p-5 hidden">
             <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-white">업로드 일정표</h3><button onclick="mpDownloadCsv()" class="px-3 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold transition hover:bg-emerald-500/25 flex items-center gap-1.5"><i data-lucide="download" class="w-3.5 h-3.5"></i>CSV 다운로드</button></div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">시작일</label><input id="mp-sched-start" type="date" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
-              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">업로드 시각</label><input id="mp-sched-time" type="time" value="18:00" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
-              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">일 업로드 수</label><input id="mp-sched-perday" type="number" min="1" max="10" value="2" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
-              <div class="flex items-end"><button onclick="mpBuildScheduleTable()" class="w-full px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-xs font-bold text-white transition">일정 생성</button></div>
+            <div class="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-3 mb-4 text-[11px] text-emerald-200/90 leading-relaxed">
+              📅 <b>권장 패턴</b> · 1순위 <b>금요일 5:20 PM</b> 고정 · 평일 대체 <b>화요일 5:20 PM</b> · 같은 방식으로 일관 유지 · <b>3~5개 먼저 올려 성과 비교</b> (유튜브는 일관된 업로드 스케줄을 중요하게 봄)
             </div>
-            <div class="overflow-x-auto rounded-xl border border-dark-border"><table class="w-full text-left text-xs min-w-[640px]" id="mp-sched-table"><thead class="text-slate-400 bg-dark-surface/60"><tr><th class="py-2.5 px-3 font-semibold">#</th><th class="py-2.5 px-3 font-semibold">업로드일</th><th class="py-2.5 px-3 font-semibold">제목</th><th class="py-2.5 px-3 font-semibold">해시태그</th><th class="py-2.5 px-3 font-semibold">파일명</th></tr></thead><tbody class="text-slate-300"></tbody></table></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">기준일(다음 금요일 자동)</label><input id="mp-sched-start" type="date" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
+              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">업로드 시각</label><input id="mp-sched-time" type="time" value="17:20" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
+              <div>
+                <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">채널 유형</label>
+                <select id="mp-sched-channel" onchange="mpOnChannelType()" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60">
+                  <option value="17:20" selected>구독자 반응형 → 17:20</option>
+                  <option value="17:10">검색·추천형 → 17:10</option>
+                  <option value="17:40">충성 시청자형 → 17:40</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">주당 업로드</label>
+                <select id="mp-sched-perweek" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60">
+                  <option value="2" selected>주 2회 · 금요일+화요일</option>
+                  <option value="1">주 1회 · 금요일만</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-4"><button onclick="mpBuildScheduleTable()" class="w-full px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-xs font-bold text-white transition">일정 생성</button></div>
+            <div class="overflow-x-auto rounded-xl border border-dark-border"><table class="w-full text-left text-xs min-w-[640px]" id="mp-sched-table"><thead class="text-slate-400 bg-dark-surface/60"><tr><th class="py-2.5 px-3 font-semibold">#</th><th class="py-2.5 px-3 font-semibold">업로드일(요일)</th><th class="py-2.5 px-3 font-semibold">제목</th><th class="py-2.5 px-3 font-semibold">해시태그</th><th class="py-2.5 px-3 font-semibold">파일명</th></tr></thead><tbody class="text-slate-300"></tbody></table></div>
           </div>
         </div>
       </main>
@@ -694,13 +720,14 @@
     }
   </script>
   <script>
-  // ================= 대량생산 카드뉴스 팩토리 =================
+  // ================= 대량생산 카드뉴스 팩토리 (티어리스트 · 리빌 · QC) =================
   (function () {
     const W = 1080, H = 1920;
     const NAVY = '#0B2545', GRAY = '#64748b', DARK = '#334155', LIGHTBG = '#f1f5f9';
+    const TIER_COLORS = { S: '#e11d48', A: '#f97316', B: '#eab308', C: '#10b981' };
     const mp = {
       data: null, catMap: {}, selectedCats: new Set(),
-      list: [], results: {}, scheduleRows: []
+      list: [], results: {}, scheduleRows: [], images: {}
     };
 
     async function mpLoadData() {
@@ -763,6 +790,7 @@
         mpRenderListPreview();
         document.getElementById('mp-result-wrap').classList.add('hidden');
         document.getElementById('mp-zip-btn').classList.add('hidden');
+        document.getElementById('mp-retry-btn').classList.add('hidden');
         document.getElementById('mp-list-wrap').classList.remove('hidden');
         lucide.createIcons();
       } catch (e) {
@@ -775,16 +803,19 @@
       document.getElementById('mp-list-count').textContent = mp.list.length + '개';
       grid.innerHTML = mp.list.map((c, i) => {
         const cat = mp.catMap[c.category] || {};
-        return `<div class="p-3 rounded-xl bg-dark-surface border border-dark-border">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="text-sm">${c.emoji || ''}</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold" style="color:${cat.color};background:${cat.color}1f">${cat.label || ''}</span>
-            <span class="text-[10px] text-slate-500 ml-auto">#${i + 1}</span>
-          </div>
-          <h4 class="text-xs font-bold text-white leading-snug">${c.title}</h4>
-          <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">${c.subtitle}</p>
-          <p class="text-[9px] text-slate-600 mt-2 truncate">출처 · ${c.source}</p>
-        </div>`;
+        const badges = (c.tiers || []).map(t =>
+          '<span class="inline-block w-5 h-5 rounded-md text-[9px] font-black text-center leading-5 mr-0.5" style="background:' + (TIER_COLORS[t.label] || '#334155') + ';color:' + (t.label === 'B' ? '#1e293b' : '#fff') + '">' + t.label + '</span>'
+        ).join('');
+        return '<div class="p-3 rounded-xl bg-dark-surface border border-dark-border">' +
+          '<div class="flex items-center gap-2 mb-1.5">' +
+          '<span class="text-sm">' + (c.emoji || '') + '</span>' +
+          '<span class="text-[10px] px-2 py-0.5 rounded-full font-bold" style="color:' + (cat.color || '#64748b') + ';background:' + (cat.color || '#64748b') + '1f">' + (cat.label || '') + '</span>' +
+          '<span class="text-[10px] text-slate-500 ml-auto">#' + (i + 1) + '</span>' +
+          '</div>' +
+          '<h4 class="text-xs font-bold text-white leading-snug">' + c.title + '</h4>' +
+          '<div class="mt-1.5">' + badges + '</div>' +
+          '<p class="text-[9px] text-slate-600 mt-2 truncate">출처 · ' + c.source + '</p>' +
+          '</div>';
       }).join('');
     }
 
@@ -810,6 +841,14 @@
       return lines;
     }
 
+    function truncateToWidth(ctx, text, maxWidth) {
+      const t = String(text || '');
+      if (ctx.measureText(t).width <= maxWidth) return t;
+      let s = t;
+      while (s.length > 1 && ctx.measureText(s + '…').width > maxWidth) s = s.slice(0, -1);
+      return s + '…';
+    }
+
     function roundRect(ctx, x, y, w, h, r) {
       ctx.beginPath();
       ctx.moveTo(x + r, y);
@@ -820,90 +859,169 @@
       ctx.closePath();
     }
 
-    function mpDrawCard(card, catColor) {
-      const c = document.createElement('canvas');
-      c.width = W; c.height = H;
-      const ctx = c.getContext('2d');
-      const cat = mp.catMap[card.category] || { label: '', emoji: '📌' };
-      const px = 80;
+    function mpLoadImage(src) {
+      if (mp.images[src] !== undefined) return mp.images[src];
+      const p = new Promise(res => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => res(img);
+        img.onerror = () => res(null);
+        img.src = src;
+      });
+      mp.images[src] = p;
+      return p;
+    }
 
+    // ---------- QC: 한글 깨짐 최종 검증 ----------
+    function mpQcTextProblems(card) {
+      const problems = [];
+      const fields = [card.title, card.subtitle, card.source].concat((card.tiers || []).flatMap(t => [t.head, t.body]));
+      const text = fields.join('\n');
+      if (text.indexOf('\uFFFD') >= 0) problems.push('대체문자(�) 발견');
+      if (/\?\?\?/.test(text)) problems.push('물음표 반복(인코딩 깨짐 의심)');
+      for (const ch of text) {
+        const cp = ch.codePointAt(0);
+        if (cp < 0x20 && ch !== '\n' && ch !== '\t') { problems.push('제어문자 포함'); break; }
+        if (cp >= 0xE000 && cp <= 0xF8FF) { problems.push('PUA(비표준) 문자 포함'); break; }
+      }
+      return problems;
+    }
+
+    function mpCanvasHasInk(canvas, x, y, w, h) {
+      const d = canvas.getContext('2d').getImageData(x, y, w, h).data;
+      let dark = 0;
+      for (let i = 0; i < d.length; i += 40) {
+        if (d[i] < 200 || d[i + 1] < 200 || d[i + 2] < 200) dark++;
+      }
+      return dark;
+    }
+
+    // ---------- 카드 렌더링 (히어로 이미지 + 티어리스트 + 리빌) ----------
+    function mpDrawCardFrame(card, cat, img, t, dur, canvas) {
+      const ctx = canvas.getContext('2d');
+      const px = 80;
+      const IMG_H = 740;
+
+      ctx.clearRect(0, 0, W, H);
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = catColor;
-      ctx.fillRect(0, 0, W, 18);
 
-      const chipText = cat.emoji + ' ' + cat.label;
-      ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
-      const chipW = ctx.measureText(chipText).width + 56;
-      roundRect(ctx, px, 72, chipW, 66, 33);
-      ctx.fillStyle = catColor; ctx.fill();
-      ctx.fillStyle = '#ffffff';
-      ctx.fillText(chipText, px + 28, 72 + 45);
-
-      ctx.fillStyle = NAVY;
-      ctx.font = '800 84px Pretendard, "Noto Sans KR", sans-serif';
-      const titleLines = wrapText(ctx, card.title, W - px * 2).slice(0, 2);
-      let ty = 250;
-      titleLines.forEach((ln, i) => ctx.fillText(ln, px, ty + i * 100));
-
-      ctx.fillStyle = GRAY;
-      ctx.font = '500 38px Pretendard, "Noto Sans KR", sans-serif';
-      const subLines = wrapText(ctx, card.subtitle, W - px * 2).slice(0, 2);
-      ty += titleLines.length * 100 - 14;
-      subLines.forEach((ln, i) => ctx.fillText(ln, px, ty + i * 48));
-      ty += subLines.length * 48 + 44;
-
-      ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(px, ty); ctx.lineTo(W - px, ty); ctx.stroke();
-      ty += 46;
-
-      const items = card.items.slice(0, 4);
-      for (let i = 0; i < items.length; i++) {
-        const it = items[i];
-        ctx.font = '800 44px Pretendard, "Noto Sans KR", sans-serif';
-        const headLines = wrapText(ctx, it.head, W - px * 2 - 150).slice(0, 2);
-        ctx.font = '500 31px Pretendard, "Noto Sans KR", sans-serif';
-        const bodyLines = wrapText(ctx, it.body, W - px * 2 - 150).slice(0, 2);
-        const boxH = 26 + headLines.length * 56 + (bodyLines.length ? 10 + bodyLines.length * 42 : 0) + 26;
-
-        roundRect(ctx, px, ty, W - px * 2, boxH, 26);
-        ctx.fillStyle = LIGHTBG; ctx.fill();
-
-        const cy = ty + boxH / 2;
-        ctx.beginPath(); ctx.arc(px + 74, cy, 40, 0, Math.PI * 2);
-        ctx.fillStyle = catColor; ctx.fill();
-        ctx.fillStyle = '#ffffff'; ctx.font = '800 42px Pretendard, "Noto Sans KR", sans-serif';
+      // 히어로 이미지 (글자 위 이미지)
+      if (img) {
+        const s = Math.max(W / img.width, IMG_H / img.height);
+        const dw = img.width * s, dh = img.height * s;
+        ctx.drawImage(img, (W - dw) / 2, (IMG_H - dh) / 2, dw, dh);
+        const g = ctx.createLinearGradient(0, IMG_H - 150, 0, IMG_H);
+        g.addColorStop(0, 'rgba(255,255,255,0)');
+        g.addColorStop(1, 'rgba(255,255,255,1)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, IMG_H - 150, W, 150);
+      } else {
+        ctx.fillStyle = cat.color || '#1d4ed8';
+        ctx.fillRect(0, 0, W, IMG_H);
+        ctx.font = '320px sans-serif';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(String(i + 1), px + 74, cy + 2);
+        ctx.fillText(card.emoji || '📌', W / 2, IMG_H / 2);
         ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-
-        const tx = px + 150;
-        ctx.fillStyle = NAVY; ctx.font = '800 44px Pretendard, "Noto Sans KR", sans-serif';
-        headLines.forEach((ln, k) => ctx.fillText(ln, tx, ty + 56 + k * 56));
-        if (bodyLines.length) {
-          ctx.fillStyle = DARK; ctx.font = '500 31px Pretendard, "Noto Sans KR", sans-serif';
-          const by = ty + 26 + headLines.length * 56 + 10 + 40;
-          bodyLines.forEach((ln, k) => ctx.fillText(ln, tx, by + k * 42));
-        }
-        ty += boxH + 30;
       }
 
+      // 카테고리 칩
+      const chipText = (cat.emoji || '') + ' ' + (cat.label || '');
+      ctx.font = '700 32px Pretendard, "Noto Sans KR", sans-serif';
+      const chipW = ctx.measureText(chipText).width + 52;
+      roundRect(ctx, 60, 52, chipW, 62, 31);
+      ctx.fillStyle = 'rgba(15,23,42,0.72)'; ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(chipText, 86, 52 + 42);
+
+      // 제목
+      ctx.fillStyle = NAVY;
+      ctx.font = '800 78px Pretendard, "Noto Sans KR", sans-serif';
+      const titleLines = wrapText(ctx, card.title, W - px * 2).slice(0, 2);
+      let ty = 806;
+      titleLines.forEach((ln, i) => ctx.fillText(ln, px, ty + i * 92));
+
+      // 부제
+      ctx.fillStyle = GRAY;
+      ctx.font = '500 36px Pretendard, "Noto Sans KR", sans-serif';
+      const subLines = wrapText(ctx, card.subtitle, W - px * 2).slice(0, 1);
+      ty += titleLines.length * 92 - 6;
+      subLines.forEach((ln, i) => ctx.fillText(ln, px, ty + i * 44));
+      ty += subLines.length * 44 + 40;
+
+      // 구분선
+      ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(px, ty); ctx.lineTo(W - px, ty); ctx.stroke();
+
+      // 티어 행 (리빌: 위에서부터 순차 등장)
+      const tiers = card.tiers || [];
+      const rowStartY = ty + 38;
+      const rowH = 136, gap = 16;
+      for (let i = 0; i < tiers.length; i++) {
+        const revealStart = dur * (0.10 + i * 0.19);
+        const slideDur = dur * 0.10;
+        let progress = 1;
+        if (t < revealStart) progress = 0;
+        else if (t < revealStart + slideDur) progress = (t - revealStart) / slideDur;
+        if (progress <= 0) continue;
+        drawTierRow(ctx, tiers[i], rowStartY + i * (rowH + gap), rowH, progress);
+      }
+
+      // 하단 출처 + 팩트체크
       const footerY = H - 150;
       roundRect(ctx, px, footerY, W - px * 2, 96, 24);
       ctx.fillStyle = '#f8fafc'; ctx.fill();
       ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.fillStyle = GRAY; ctx.font = '500 28px Pretendard, "Noto Sans KR", sans-serif';
-      const srcLines = wrapText(ctx, '출처 · ' + card.source, W - px * 2 - 230).slice(0, 2);
-      srcLines.forEach((ln, k) => ctx.fillText(ln, px + 32, footerY + 40 + k * 38));
+      ctx.fillStyle = GRAY; ctx.font = '500 27px Pretendard, "Noto Sans KR", sans-serif';
+      const srcText = truncateToWidth(ctx, '출처 · ' + card.source, W - px * 2 - 240);
+      ctx.fillText(srcText, px + 30, footerY + 60);
 
       const stampText = '✓ 팩트체크';
-      ctx.font = '800 30px Pretendard, "Noto Sans KR", sans-serif';
+      ctx.font = '800 29px Pretendard, "Noto Sans KR", sans-serif';
       const sw = ctx.measureText(stampText).width + 40;
       roundRect(ctx, W - px - sw - 6, footerY - 18, sw, 52, 26);
       ctx.fillStyle = '#16a34a'; ctx.fill();
       ctx.fillStyle = '#ffffff';
       ctx.fillText(stampText, W - px - sw + 14, footerY + 17);
+    }
 
+    function drawTierRow(ctx, tier, y, rowH, progress) {
+      const px = 80;
+      const rowW = W - px * 2;
+      const alpha = Math.min(1, progress * 1.6);
+      const ty = y - (1 - progress) * 22;
+      const color = TIER_COLORS[tier.label] || '#334155';
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+
+      roundRect(ctx, px, ty, rowW, rowH, 24);
+      ctx.fillStyle = LIGHTBG; ctx.fill();
+
+      roundRect(ctx, px, ty, 118, rowH, 24);
+      ctx.fillStyle = color; ctx.fill();
+      ctx.fillStyle = tier.label === 'B' ? '#1e293b' : '#ffffff';
+      ctx.font = '800 56px Pretendard, "Noto Sans KR", sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(tier.label, px + 59, ty + rowH / 2 + 2);
+      ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+      const tx = px + 150;
+      const maxW = rowW - 150 - 40;
+      ctx.fillStyle = NAVY;
+      ctx.font = '800 42px Pretendard, "Noto Sans KR", sans-serif';
+      ctx.fillText(truncateToWidth(ctx, tier.head, maxW), tx, ty + 58);
+      if (tier.body) {
+        ctx.fillStyle = DARK;
+        ctx.font = '500 30px Pretendard, "Noto Sans KR", sans-serif';
+        ctx.fillText(truncateToWidth(ctx, tier.body, maxW), tx, ty + 100);
+      }
+      ctx.restore();
+    }
+
+    function mpMakeCanvas() {
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
       return c;
     }
 
@@ -926,7 +1044,19 @@
       });
     }
 
-    async function mpEncodeMp4(canvas, seconds) {
+    async function mpEnsureFonts() {
+      await document.fonts.ready;
+      try {
+        await Promise.all([
+          document.fonts.load('800 78px Pretendard'),
+          document.fonts.load('800 42px Pretendard'),
+          document.fonts.load('800 56px Pretendard')
+        ]);
+      } catch (e) { /* fallback 폰트로 계속 */ }
+      await document.fonts.ready;
+    }
+
+    async function mpEncodeMp4(canvas, drawFrame, seconds) {
       if (typeof VideoEncoder === 'undefined' || !window.Mp4Muxer) {
         throw new Error('이 브라우저는 MP4(H.264) 인코딩을 지원하지 않습니다. Chrome/Edge를 사용해주세요.');
       }
@@ -967,6 +1097,7 @@
 
       const step = Math.round(1e6 / fps);
       for (let i = 0; i < total; i++) {
+        drawFrame(canvas, i / fps);
         const vf = new VideoFrame(canvas, { timestamp: i * step, duration: step });
         encoder.encode(vf, { keyFrame: i % 25 === 0 });
         vf.close();
@@ -992,38 +1123,57 @@
       n.classList.remove('hidden');
     }
 
+    // ---------- 카드 1개 생성 + QC ----------
+    async function mpRenderCard(card, seconds) {
+      const cat = mp.catMap[card.category] || { color: '#1d4ed8', label: '', emoji: '📌' };
+      const img = await mpLoadImage(card.image);
+      const canvas = mpMakeCanvas();
+      const dur = seconds;
+
+      mpDrawCardFrame(card, cat, img, dur, dur, canvas); // 전체 노출(정지)
+
+      const qc = { ok: true, problems: [] };
+      qc.problems = qc.problems.concat(mpQcTextProblems(card));
+      const ink = mpCanvasHasInk(canvas, 80, 806, W - 160, 220);
+      if (ink < 4) qc.problems.push('타이틀 렌더 미발견(폰트 누락 의심)');
+
+      let pngBlob = null;
+      try { pngBlob = await canvasToBlob(canvas, 'image/png'); }
+      catch (e) { qc.problems.push('PNG 생성 실패'); }
+
+      let mp4Blob = null;
+      try {
+        mp4Blob = await mpEncodeMp4(canvas, (cv, t) => mpDrawCardFrame(card, cat, img, t, dur, cv), dur);
+      } catch (e) {
+        qc.problems.push('MP4 인코딩 불가');
+      }
+
+      mpDrawCardFrame(card, cat, img, dur, dur, canvas); // 썸네일용 전체 화면 복원
+      qc.ok = qc.problems.length === 0;
+      return { canvas, pngBlob, mp4Blob, card, qc };
+    }
+
     window.mpRenderAll = async function () {
       try {
         if (mp.list.length === 0) { await mpBuildList(); if (mp.list.length === 0) return; }
-        const seconds = Math.max(3, Math.min(60, parseInt(document.getElementById('mp-duration').value, 10) || 10));
-        await document.fonts.ready;
+        const seconds = Math.max(3, Math.min(60, parseInt(document.getElementById('mp-duration').value, 10) || 4));
+        await mpEnsureFonts();
         if (!window.Mp4Muxer) await mpLoadScript('https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.min.js');
         if (typeof VideoEncoder === 'undefined') throw new Error('이 브라우저는 WebCodecs를 지원하지 않습니다. Chrome/Edge를 사용해주세요.');
 
         mp.results = {};
         const total = mp.list.length;
-        let mp4Fail = 0;
         document.getElementById('mp-result-wrap').classList.remove('hidden');
         document.getElementById('mp-results').innerHTML = '<p class="text-[11px] text-slate-400 col-span-full">생성 중입니다...</p>';
 
         for (let i = 0; i < total; i++) {
           const card = mp.list[i];
-          const cat = mp.catMap[card.category] || {};
-          mpProgress(Math.round(i / total * 100), '(' + (i + 1) + '/' + total + ') ' + card.title + ' 카드 렌더링 중...');
-          const canvas = mpDrawCard(card, cat.color || '#1d4ed8');
-          const pngBlob = await canvasToBlob(canvas, 'image/png');
-          let mp4Blob = null;
-          try {
-            mpProgress(Math.round((i + 0.5) / total * 100), '(' + (i + 1) + '/' + total + ') ' + card.title + ' MP4 인코딩 중...');
-            mp4Blob = await mpEncodeMp4(canvas, seconds);
-          } catch (e) {
-            mp4Fail++;
-            console.warn('MP4 encode failed:', card.title, e);
-          }
-          mp.results[card.id] = { canvas, pngBlob, mp4Blob, card };
+          mpProgress(Math.round(i / total * 100), '(' + (i + 1) + '/' + total + ') ' + card.title + ' 생성 + QC 검증 중...');
+          mp.results[card.id] = await mpRenderCard(card, seconds);
         }
         mpProgress(100, '완료!');
-        mpRenderResults(mp4Fail);
+        mpRenderResults();
+        mpUpdateRetryButton();
         document.getElementById('mp-zip-btn').classList.remove('hidden');
         lucide.createIcons();
       } catch (e) {
@@ -1031,16 +1181,49 @@
       }
     };
 
-    function mpRenderResults(mp4Fail) {
+    window.mpRegenerateFailed = async function () {
+      try {
+        const failed = mp.list.filter(c => mp.results[c.id] && mp.results[c.id].qc && !mp.results[c.id].qc.ok);
+        if (failed.length === 0) { mpShowNote('탈락된 카드가 없습니다.'); return; }
+        const seconds = Math.max(3, Math.min(60, parseInt(document.getElementById('mp-duration').value, 10) || 4));
+        await mpEnsureFonts();
+        mpProgress(0, '탈락 ' + failed.length + '개 재생성 중...');
+        for (let i = 0; i < failed.length; i++) {
+          const card = failed[i];
+          mpProgress(Math.round(i / failed.length * 100), '(' + (i + 1) + '/' + failed.length + ') ' + card.title + ' 재생성...');
+          mp.results[card.id] = await mpRenderCard(card, seconds);
+        }
+        mpProgress(100, '재생성 완료');
+        mpRenderResults();
+        mpUpdateRetryButton();
+        lucide.createIcons();
+      } catch (e) {
+        mpShowNote('⚠️ ' + e.message);
+      }
+    };
+
+    function mpUpdateRetryButton() {
+      const btn = document.getElementById('mp-retry-btn');
+      if (!btn) return;
+      const failed = mp.list.filter(c => mp.results[c.id] && mp.results[c.id].qc && !mp.results[c.id].qc.ok);
+      btn.classList.toggle('hidden', failed.length === 0);
+      if (failed.length) btn.innerHTML = '<i data-lucide="refresh-cw" class="w-4 h-4"></i>탈락 재생성 (' + failed.length + ')';
+    }
+
+    function mpRenderResults() {
       const grid = document.getElementById('mp-results');
       grid.innerHTML = mp.list.map((c, i) => {
         const r = mp.results[c.id];
         const thumb = r && r.canvas ? mpThumbDataUrl(r.canvas) : '';
+        const qc = r && r.qc;
+        const qcBadge = qc && qc.ok
+          ? '<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[9px] font-bold">✓ QC</span>'
+          : '<span class="px-1.5 py-0.5 rounded bg-red-500/20 text-red-300 text-[9px] font-bold" title="' + (qc ? qc.problems.join(', ') : '') + '">⚠ 탈락</span>';
         const mp4ok = r && r.mp4Blob;
         return '<div class="rounded-xl overflow-hidden border border-dark-border bg-dark-surface">' +
           '<img src="' + thumb + '" class="w-full aspect-[9/16] object-cover" alt="' + c.title + '">' +
           '<div class="p-2 space-y-1.5">' +
-          '<p class="text-[10px] font-bold text-white truncate">' + (i + 1) + '. ' + c.title + '</p>' +
+          '<div class="flex items-center gap-1.5"><p class="text-[10px] font-bold text-white truncate flex-1">' + (i + 1) + '. ' + c.title + '</p>' + qcBadge + '</div>' +
           '<div class="flex gap-1.5">' +
           '<button onclick="mpDownloadResult(\'' + c.id + '\',\'png\')" class="flex-1 py-1 rounded-md bg-dark-border/60 text-[10px] font-bold text-slate-300 hover:bg-dark-border transition">PNG</button>' +
           (mp4ok
@@ -1048,7 +1231,6 @@
             : '<button disabled class="flex-1 py-1 rounded-md bg-dark-border/40 text-slate-600 text-[10px] font-bold transition">MP4 불가</button>') +
           '</div></div></div>';
       }).join('');
-      if (mp4Fail > 0) mpShowNote('⚠️ ' + mp4Fail + '개는 MP4 인코딩이 지원되지 않아 PNG만 생성했습니다. (Chrome/Edge 권장)');
     }
 
     window.mpDownloadResult = function (id, kind) {
@@ -1088,7 +1270,7 @@
         mp.list.forEach((c, i) => {
           const r = mp.results[c.id];
           if (!r) return;
-          pngFolder.file((i + 1) + '_' + mpSlug(c.title) + '.png', r.pngBlob);
+          if (r.pngBlob) pngFolder.file((i + 1) + '_' + mpSlug(c.title) + '.png', r.pngBlob);
           if (r.mp4Blob) mp4Folder.file((i + 1) + '_' + mpSlug(c.title) + '.mp4', r.mp4Blob);
         });
         zip.file('업로드일정표.csv', mpCsvText());
@@ -1105,14 +1287,26 @@
       }
     };
 
+    const WEEKDAY_KR = ['일', '월', '화', '수', '목', '금', '토'];
+    function mpIsoDate(d) {
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function mpNextWeekday(fromDate, targetDay) {
+      const d = new Date(fromDate.getTime());
+      d.setDate(d.getDate() + ((targetDay - d.getDay() + 7) % 7));
+      return d;
+    }
+    window.mpOnChannelType = function () {
+      const sel = document.getElementById('mp-sched-channel');
+      const t = document.getElementById('mp-sched-time');
+      if (sel && t && sel.value) t.value = sel.value;
+    };
+
     window.mpMakeSchedule = async function () {
       try {
         if (mp.list.length === 0) { await mpBuildList(); if (mp.list.length === 0) return; }
         const startEl = document.getElementById('mp-sched-start');
-        if (!startEl.value) {
-          const d = new Date(Date.now() + 86400000);
-          startEl.value = d.toISOString().slice(0, 10);
-        }
+        if (!startEl.value) startEl.value = mpIsoDate(mpNextWeekday(new Date(), 5));
         document.getElementById('mp-sched-wrap').classList.remove('hidden');
         mpBuildScheduleTable();
         lucide.createIcons();
@@ -1126,23 +1320,32 @@
 
     window.mpBuildScheduleTable = function () {
       const start = document.getElementById('mp-sched-start').value;
-      const time = document.getElementById('mp-sched-time').value || '18:00';
-      const perDay = Math.max(1, Math.min(10, parseInt(document.getElementById('mp-sched-perday').value, 10) || 2));
-      if (!start) { mpShowNote('시작일을 선택해주세요.'); return; }
-      const rows = [];
-      const d = new Date(start + 'T00:00:00');
-      mp.list.forEach((c, i) => {
-        const day = new Date(d.getTime() + Math.floor(i / perDay) * 86400000);
-        const iso = day.toISOString().slice(0, 10);
-        rows.push({
+      const time = document.getElementById('mp-sched-time').value || '17:20';
+      const perWeek = parseInt(document.getElementById('mp-sched-perweek').value, 10) || 2;
+      if (!start) { mpShowNote('기준일을 선택해주세요.'); return; }
+      const base = new Date(start + 'T00:00:00');
+      const friday = mpNextWeekday(base, 5);
+      const slots = [];
+      for (let k = 0; slots.length < mp.list.length; k++) {
+        const f = new Date(friday.getTime() + k * 7 * 86400000);
+        slots.push(f);
+        if (perWeek >= 2 && slots.length < mp.list.length) {
+          slots.push(new Date(f.getTime() + 4 * 86400000));
+        }
+      }
+      const rows = mp.list.map((c, i) => {
+        const day = slots[i];
+        const wd = WEEKDAY_KR[day.getDay()];
+        const ext = (mp.results[c.id] && mp.results[c.id].mp4Blob) ? 'mp4' : (mp.results[c.id] && mp.results[c.id].pngBlob ? 'png' : 'mp4');
+        return {
           no: i + 1,
-          when: iso + ' ' + time,
+          when: mpIsoDate(day) + ' (' + wd + ') ' + time,
           title: c.title,
           desc: '40~60대가 꼭 알아야 할 "' + c.title + '"을 공신력 있는 통계로 정리했습니다. 출처: ' + c.source,
           tags: mpTagFor(c).join(' '),
-          file: (i + 1) + '_' + mpSlug(c.title) + '.mp4',
+          file: (i + 1) + '_' + mpSlug(c.title) + '.' + ext,
           source: c.source
-        });
+        };
       });
       mp.scheduleRows = rows;
       const tbody = document.querySelector('#mp-sched-table tbody');

@@ -3,7 +3,5 @@
 __pycache__/
 *.pyc
 build/
-queues.json
-devices.json
-*.xlsx
-*.csv
+dist/
+.DS_Store

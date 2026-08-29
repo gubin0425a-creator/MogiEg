@@ -1,8 +1,0 @@
-flask
-flask-cors
-requests
-beautifulsoup4
-pandas
-openpyxl
-google-genai
-curl_cffi

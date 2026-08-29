@@ -22,6 +22,7 @@
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="static/verified_cards.js"></script>
 
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
@@ -70,6 +71,9 @@
         </button>
         <button onclick="switchTab('skills')" id="nav-skills" class="tab-btn flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:bg-dark-surface hover:text-slate-200 transition">
           <i data-lucide="boxes" class="w-4 h-4 text-cyan-400"></i><span>80+ AI 스킬 라이브러리</span>
+        </button>
+        <button onclick="switchTab('massprod')" id="nav-massprod" class="tab-btn flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-xl text-slate-400 hover:bg-dark-surface hover:text-slate-200 transition">
+          <i data-lucide="factory" class="w-4 h-4 text-fuchsia-400"></i><span>대량생산 카드뉴스</span>
         </button>
       </nav>
 
@@ -222,6 +226,76 @@
             <div onclick="fillInputBox('유튜브 썸네일에 들어갈 7글자 이내 클릭유도 텍스트 5개 만들어줘')" class="p-4 rounded-xl bg-dark-card border border-dark-border hover:border-red-500/40 hover:bg-dark-surface cursor-pointer transition"><div class="p-2 rounded-lg bg-red-500/10 text-red-400 w-fit mb-2"><i data-lucide="image" class="w-4 h-4"></i></div><h4 class="text-xs font-bold text-white">CTR 극대화 썸네일 카피</h4><p class="text-[11px] text-slate-400 mt-1">클릭률을 높이는 짧고 강렬한 텍스트</p></div>
             <div onclick="fillInputBox('경쟁사 제품과 비교하는 릴스 비교 품평회 대본 짜줘')" class="p-4 rounded-xl bg-dark-card border border-dark-border hover:border-amber-500/40 hover:bg-dark-surface cursor-pointer transition"><div class="p-2 rounded-lg bg-amber-500/10 text-amber-400 w-fit mb-2"><i data-lucide="scale" class="w-4 h-4"></i></div><h4 class="text-xs font-bold text-white">비교 품평회 기획자</h4><p class="text-[11px] text-slate-400 mt-1">A vs B 블라인드 테스트 숏폼 대본</p></div>
             <div onclick="fillInputBox('콘텐츠 하나로 쇼츠, 릴스, 블로그, 스레드까지 다변화하는 OSMU 전략 짜줘')" class="p-4 rounded-xl bg-dark-card border border-dark-border hover:border-blue-500/40 hover:bg-dark-surface cursor-pointer transition"><div class="p-2 rounded-lg bg-blue-500/10 text-blue-400 w-fit mb-2"><i data-lucide="share-2" class="w-4 h-4"></i></div><h4 class="text-xs font-bold text-white">OSMU 멀티 배포기</h4><p class="text-[11px] text-slate-400 mt-1">1개 소스로 5개 채널 원소스 멀티유즈</p></div>
+          </div>
+        </div>
+        <div id="tab-massprod" class="tab-content hidden max-w-5xl mx-auto space-y-6">
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <h2 class="text-xl font-bold text-white">📰 대량생산 카드뉴스 팩토리</h2>
+              <p class="text-xs text-slate-400 mt-1">공신력(공공·공식) 통계만 사용 · 40~60대 공감 정보성 카드 1장 = 세로(9:16) MP4 1개 · 원클릭 일괄 생성</p>
+            </div>
+            <span class="text-xs px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold shrink-0">✓ 팩트체크: 검증 데이터만</span>
+          </div>
+
+          <div class="rounded-2xl bg-dark-card border border-dark-border p-5 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white flex items-center gap-2"><i data-lucide="sliders-horizontal" class="w-4 h-4 text-fuchsia-400"></i>생성 설정</h3>
+              <span class="text-[11px] text-slate-400">대상: <b class="text-fuchsia-400">40~60대</b> · 데이터 <span id="mp-total-cards" class="text-slate-200">-</span>건</span>
+            </div>
+            <div>
+              <label class="text-[11px] font-semibold text-slate-400 block mb-2">카테고리 <span class="text-slate-600">(선택 해제하면 전체 선택)</span></label>
+              <div id="mp-cats" class="flex flex-wrap gap-2"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div>
+                <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">생성 개수</label>
+                <input id="mp-count" type="number" min="1" max="40" value="40" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-fuchsia-500/60">
+              </div>
+              <div>
+                <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">영상 길이(초)</label>
+                <input id="mp-duration" type="number" min="3" max="60" value="10" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-fuchsia-500/60">
+              </div>
+              <div>
+                <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">촬영 방식</label>
+                <div class="px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-slate-300">정지 카드 (효과 없음)</div>
+              </div>
+              <div>
+                <label class="text-[11px] font-semibold text-slate-400 block mb-1.5">해상도</label>
+                <div class="px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-slate-300">1080×1920 (9:16)</div>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button onclick="mpBuildList()" class="px-4 py-2.5 rounded-xl bg-dark-surface border border-dark-border hover:border-fuchsia-500/50 text-xs font-bold text-white transition flex items-center gap-2"><i data-lucide="list" class="w-4 h-4 text-fuchsia-400"></i>1) 주제 구성</button>
+              <button onclick="mpRenderAll()" id="mp-render-btn" class="px-4 py-2.5 rounded-xl bg-fuchsia-500 hover:bg-fuchsia-600 text-xs font-bold text-white transition flex items-center gap-2"><i data-lucide="clapperboard" class="w-4 h-4"></i>2) 전체 생성 (PNG+MP4)</button>
+              <button onclick="mpMakeSchedule()" id="mp-sched-btn" class="px-4 py-2.5 rounded-xl bg-dark-surface border border-dark-border hover:border-emerald-500/50 text-xs font-bold text-white transition flex items-center gap-2"><i data-lucide="calendar-clock" class="w-4 h-4 text-emerald-400"></i>3) 업로드 일정표</button>
+              <button onclick="mpDownloadZip()" id="mp-zip-btn" class="px-4 py-2.5 rounded-xl bg-dark-surface border border-dark-border hover:border-blue-500/50 text-xs font-bold text-white transition flex items-center gap-2 hidden"><i data-lucide="archive" class="w-4 h-4 text-blue-400"></i>ZIP 다운로드</button>
+            </div>
+            <div id="mp-progress" class="hidden">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1.5"><span id="mp-progress-label">준비 중...</span><span id="mp-progress-pct">0%</span></div>
+              <div class="h-2 rounded-full bg-dark-surface overflow-hidden"><div id="mp-progress-bar" class="h-full bg-fuchsia-500 transition-all duration-200" style="width:0%"></div></div>
+            </div>
+            <p id="mp-note" class="text-[11px] text-slate-500 leading-relaxed hidden"></p>
+          </div>
+
+          <div id="mp-list-wrap" class="rounded-2xl bg-dark-card border border-dark-border p-5 hidden">
+            <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-white">구성된 주제 <span id="mp-list-count" class="text-fuchsia-400"></span></h3><span class="text-[11px] text-slate-400">모든 카드 하단에 출처 표기</span></div>
+            <div id="mp-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+          </div>
+
+          <div id="mp-result-wrap" class="rounded-2xl bg-dark-card border border-dark-border p-5 hidden">
+            <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-white">생성 결과</h3><span class="text-[11px] text-slate-400">카드별 PNG/MP4 개별 다운로드</span></div>
+            <div id="mp-results" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
+          </div>
+
+          <div id="mp-sched-wrap" class="rounded-2xl bg-dark-card border border-dark-border p-5 hidden">
+            <div class="flex items-center justify-between mb-3"><h3 class="text-sm font-bold text-white">업로드 일정표</h3><button onclick="mpDownloadCsv()" class="px-3 py-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold transition hover:bg-emerald-500/25 flex items-center gap-1.5"><i data-lucide="download" class="w-3.5 h-3.5"></i>CSV 다운로드</button></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">시작일</label><input id="mp-sched-start" type="date" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
+              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">업로드 시각</label><input id="mp-sched-time" type="time" value="18:00" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
+              <div><label class="text-[11px] font-semibold text-slate-400 block mb-1.5">일 업로드 수</label><input id="mp-sched-perday" type="number" min="1" max="10" value="2" class="w-full px-3 py-2 rounded-xl bg-dark-surface border border-dark-border text-sm text-white focus:outline-none focus:border-emerald-500/60"></div>
+              <div class="flex items-end"><button onclick="mpBuildScheduleTable()" class="w-full px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-xs font-bold text-white transition">일정 생성</button></div>
+            </div>
+            <div class="overflow-x-auto rounded-xl border border-dark-border"><table class="w-full text-left text-xs min-w-[640px]" id="mp-sched-table"><thead class="text-slate-400 bg-dark-surface/60"><tr><th class="py-2.5 px-3 font-semibold">#</th><th class="py-2.5 px-3 font-semibold">업로드일</th><th class="py-2.5 px-3 font-semibold">제목</th><th class="py-2.5 px-3 font-semibold">해시태그</th><th class="py-2.5 px-3 font-semibold">파일명</th></tr></thead><tbody class="text-slate-300"></tbody></table></div>
           </div>
         </div>
       </main>
@@ -618,6 +692,495 @@
       alert('🔑 API 키가 브라우저에 안전하게 저장되었습니다!\\n이제 정적 페이지에서도 설정하신 키로 정상 작동합니다.');
       closeKeyModal();
     }
+  </script>
+  <script>
+  // ================= 대량생산 카드뉴스 팩토리 =================
+  (function () {
+    const W = 1080, H = 1920;
+    const NAVY = '#0B2545', GRAY = '#64748b', DARK = '#334155', LIGHTBG = '#f1f5f9';
+    const mp = {
+      data: null, catMap: {}, selectedCats: new Set(),
+      list: [], results: {}, scheduleRows: []
+    };
+
+    async function mpLoadData() {
+      if (mp.data) return mp.data;
+      const src = window.VERIFIED_CARDS;
+      if (!src) throw new Error('검증 데이터(static/verified_cards.js)를 찾을 수 없습니다.');
+      mp.data = src;
+      mp.catMap = {};
+      (src.categories || []).forEach(c => mp.catMap[c.id] = c);
+      document.getElementById('mp-total-cards').textContent = (src.cards || []).length;
+      mpInitChips();
+      return mp.data;
+    }
+
+    function mpInitChips() {
+      const wrap = document.getElementById('mp-cats');
+      wrap.innerHTML = '';
+      (mp.data.categories || []).forEach(cat => {
+        const b = document.createElement('button');
+        b.dataset.cat = cat.id;
+        b.textContent = cat.emoji + ' ' + cat.label;
+        b.onclick = () => {
+          if (mp.selectedCats.has(cat.id)) mp.selectedCats.delete(cat.id); else mp.selectedCats.add(cat.id);
+          mpPaintChips();
+        };
+        wrap.appendChild(b);
+      });
+      mpPaintChips();
+    }
+    function mpPaintChips() {
+      document.querySelectorAll('#mp-cats button').forEach(b => {
+        const on = mp.selectedCats.has(b.dataset.cat);
+        b.className = 'px-3 py-1.5 rounded-full text-[11px] font-bold border transition ' + (on
+          ? 'border-fuchsia-500/60 bg-fuchsia-500/15 text-fuchsia-300'
+          : 'border-dark-border text-slate-400 hover:border-fuchsia-500/40');
+      });
+    }
+
+    function mpShuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    window.mpBuildList = async function () {
+      try {
+        const data = await mpLoadData();
+        const all = data.cards || [];
+        let pool = all;
+        if (mp.selectedCats.size > 0) pool = all.filter(c => mp.selectedCats.has(c.category));
+        if (pool.length === 0) { mpShowNote('선택한 카테고리에 카드가 없습니다.'); return; }
+        let count = parseInt(document.getElementById('mp-count').value, 10) || 40;
+        count = Math.max(1, Math.min(count, pool.length));
+        mp.list = mpShuffle(pool).slice(0, count);
+        mp.results = {};
+        mp.scheduleRows = [];
+        mpRenderListPreview();
+        document.getElementById('mp-result-wrap').classList.add('hidden');
+        document.getElementById('mp-zip-btn').classList.add('hidden');
+        document.getElementById('mp-list-wrap').classList.remove('hidden');
+        lucide.createIcons();
+      } catch (e) {
+        mpShowNote('⚠️ ' + e.message);
+      }
+    };
+
+    function mpRenderListPreview() {
+      const grid = document.getElementById('mp-list');
+      document.getElementById('mp-list-count').textContent = mp.list.length + '개';
+      grid.innerHTML = mp.list.map((c, i) => {
+        const cat = mp.catMap[c.category] || {};
+        return `<div class="p-3 rounded-xl bg-dark-surface border border-dark-border">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-sm">${c.emoji || ''}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full font-bold" style="color:${cat.color};background:${cat.color}1f">${cat.label || ''}</span>
+            <span class="text-[10px] text-slate-500 ml-auto">#${i + 1}</span>
+          </div>
+          <h4 class="text-xs font-bold text-white leading-snug">${c.title}</h4>
+          <p class="text-[10px] text-slate-400 mt-1 leading-relaxed">${c.subtitle}</p>
+          <p class="text-[9px] text-slate-600 mt-2 truncate">출처 · ${c.source}</p>
+        </div>`;
+      }).join('');
+    }
+
+    function wrapText(ctx, text, maxWidth) {
+      const lines = [];
+      for (const para of String(text).split('\n')) {
+        const words = para.split(' ');
+        let cur = '';
+        for (let w of words) {
+          const candidate = cur ? cur + ' ' + w : w;
+          if (ctx.measureText(candidate).width <= maxWidth) { cur = candidate; continue; }
+          if (cur) { lines.push(cur); cur = ''; }
+          let piece = '';
+          for (const ch of [...w]) {
+            const t = piece + ch;
+            if (ctx.measureText(t).width > maxWidth && piece) { lines.push(piece); piece = ch; }
+            else piece = t;
+          }
+          cur = piece;
+        }
+        if (cur) lines.push(cur);
+      }
+      return lines;
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function mpDrawCard(card, catColor) {
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const ctx = c.getContext('2d');
+      const cat = mp.catMap[card.category] || { label: '', emoji: '📌' };
+      const px = 80;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = catColor;
+      ctx.fillRect(0, 0, W, 18);
+
+      const chipText = cat.emoji + ' ' + cat.label;
+      ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
+      const chipW = ctx.measureText(chipText).width + 56;
+      roundRect(ctx, px, 72, chipW, 66, 33);
+      ctx.fillStyle = catColor; ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(chipText, px + 28, 72 + 45);
+
+      ctx.fillStyle = NAVY;
+      ctx.font = '800 84px Pretendard, "Noto Sans KR", sans-serif';
+      const titleLines = wrapText(ctx, card.title, W - px * 2).slice(0, 2);
+      let ty = 250;
+      titleLines.forEach((ln, i) => ctx.fillText(ln, px, ty + i * 100));
+
+      ctx.fillStyle = GRAY;
+      ctx.font = '500 38px Pretendard, "Noto Sans KR", sans-serif';
+      const subLines = wrapText(ctx, card.subtitle, W - px * 2).slice(0, 2);
+      ty += titleLines.length * 100 - 14;
+      subLines.forEach((ln, i) => ctx.fillText(ln, px, ty + i * 48));
+      ty += subLines.length * 48 + 44;
+
+      ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(px, ty); ctx.lineTo(W - px, ty); ctx.stroke();
+      ty += 46;
+
+      const items = card.items.slice(0, 4);
+      for (let i = 0; i < items.length; i++) {
+        const it = items[i];
+        ctx.font = '800 44px Pretendard, "Noto Sans KR", sans-serif';
+        const headLines = wrapText(ctx, it.head, W - px * 2 - 150).slice(0, 2);
+        ctx.font = '500 31px Pretendard, "Noto Sans KR", sans-serif';
+        const bodyLines = wrapText(ctx, it.body, W - px * 2 - 150).slice(0, 2);
+        const boxH = 26 + headLines.length * 56 + (bodyLines.length ? 10 + bodyLines.length * 42 : 0) + 26;
+
+        roundRect(ctx, px, ty, W - px * 2, boxH, 26);
+        ctx.fillStyle = LIGHTBG; ctx.fill();
+
+        const cy = ty + boxH / 2;
+        ctx.beginPath(); ctx.arc(px + 74, cy, 40, 0, Math.PI * 2);
+        ctx.fillStyle = catColor; ctx.fill();
+        ctx.fillStyle = '#ffffff'; ctx.font = '800 42px Pretendard, "Noto Sans KR", sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(i + 1), px + 74, cy + 2);
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+        const tx = px + 150;
+        ctx.fillStyle = NAVY; ctx.font = '800 44px Pretendard, "Noto Sans KR", sans-serif';
+        headLines.forEach((ln, k) => ctx.fillText(ln, tx, ty + 56 + k * 56));
+        if (bodyLines.length) {
+          ctx.fillStyle = DARK; ctx.font = '500 31px Pretendard, "Noto Sans KR", sans-serif';
+          const by = ty + 26 + headLines.length * 56 + 10 + 40;
+          bodyLines.forEach((ln, k) => ctx.fillText(ln, tx, by + k * 42));
+        }
+        ty += boxH + 30;
+      }
+
+      const footerY = H - 150;
+      roundRect(ctx, px, footerY, W - px * 2, 96, 24);
+      ctx.fillStyle = '#f8fafc'; ctx.fill();
+      ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = GRAY; ctx.font = '500 28px Pretendard, "Noto Sans KR", sans-serif';
+      const srcLines = wrapText(ctx, '출처 · ' + card.source, W - px * 2 - 230).slice(0, 2);
+      srcLines.forEach((ln, k) => ctx.fillText(ln, px + 32, footerY + 40 + k * 38));
+
+      const stampText = '✓ 팩트체크';
+      ctx.font = '800 30px Pretendard, "Noto Sans KR", sans-serif';
+      const sw = ctx.measureText(stampText).width + 40;
+      roundRect(ctx, W - px - sw - 6, footerY - 18, sw, 52, 26);
+      ctx.fillStyle = '#16a34a'; ctx.fill();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillText(stampText, W - px - sw + 14, footerY + 17);
+
+      return c;
+    }
+
+    function canvasToBlob(canvas, type, quality) {
+      return new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error('이미지 생성 실패')), type, quality));
+    }
+
+    function mpThumbDataUrl(canvas) {
+      const t = document.createElement('canvas');
+      t.width = 270; t.height = 480;
+      t.getContext('2d').drawImage(canvas, 0, 0, 270, 480);
+      return t.toDataURL('image/jpeg', 0.72);
+    }
+
+    async function mpLoadScript(src) {
+      return new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = src; s.onload = res; s.onerror = () => rej(new Error('스크립트 로드 실패: ' + src));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function mpEncodeMp4(canvas, seconds) {
+      if (typeof VideoEncoder === 'undefined' || !window.Mp4Muxer) {
+        throw new Error('이 브라우저는 MP4(H.264) 인코딩을 지원하지 않습니다. Chrome/Edge를 사용해주세요.');
+      }
+      const fps = 5;
+      const total = Math.max(2, Math.round(seconds * fps));
+      const Muxer = window.Mp4Muxer.Muxer;
+      const ArrayBufferTarget = window.Mp4Muxer.ArrayBufferTarget;
+      const muxer = new Muxer({
+        target: new ArrayBufferTarget(),
+        video: { codec: 'avc', width: canvas.width, height: canvas.height },
+        fastStart: 'in-memory'
+      });
+
+      let encErr = null;
+      const encoder = new VideoEncoder({
+        output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+        error: e => { encErr = e; }
+      });
+
+      const codecs = ['avc1.640028', 'avc1.4d0028', 'avc1.42001e'];
+      let ok = false;
+      for (const codec of codecs) {
+        try {
+          let supported = true;
+          if (VideoEncoder.isConfigSupported) {
+            const r = await VideoEncoder.isConfigSupported({ codec, width: canvas.width, height: canvas.height, bitrate: 5000000, framerate: fps });
+            supported = r.supported;
+          }
+          if (supported) {
+            const cfg = { codec, width: canvas.width, height: canvas.height, bitrate: 5000000, framerate: fps };
+            if (codec.startsWith('avc1')) cfg.avc = { format: 'avc' };
+            encoder.configure(cfg);
+            ok = true; break;
+          }
+        } catch (e) { /* try next */ }
+      }
+      if (!ok) throw new Error('지원되는 H.264 인코더를 찾지 못했습니다.');
+
+      const step = Math.round(1e6 / fps);
+      for (let i = 0; i < total; i++) {
+        const vf = new VideoFrame(canvas, { timestamp: i * step, duration: step });
+        encoder.encode(vf, { keyFrame: i % 25 === 0 });
+        vf.close();
+        if (i % 5 === 0) await new Promise(r => setTimeout(r, 0));
+      }
+      await encoder.flush();
+      encoder.close();
+      if (encErr) throw encErr;
+      muxer.finalize();
+      return new Blob([muxer.target.buffer], { type: 'video/mp4' });
+    }
+
+    function mpProgress(pct, label) {
+      const wrap = document.getElementById('mp-progress');
+      wrap.classList.remove('hidden');
+      document.getElementById('mp-progress-bar').style.width = pct + '%';
+      document.getElementById('mp-progress-pct').textContent = pct + '%';
+      if (label) document.getElementById('mp-progress-label').textContent = label;
+    }
+    function mpShowNote(msg) {
+      const n = document.getElementById('mp-note');
+      n.textContent = msg;
+      n.classList.remove('hidden');
+    }
+
+    window.mpRenderAll = async function () {
+      try {
+        if (mp.list.length === 0) { await mpBuildList(); if (mp.list.length === 0) return; }
+        const seconds = Math.max(3, Math.min(60, parseInt(document.getElementById('mp-duration').value, 10) || 10));
+        await document.fonts.ready;
+        if (!window.Mp4Muxer) await mpLoadScript('https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.min.js');
+        if (typeof VideoEncoder === 'undefined') throw new Error('이 브라우저는 WebCodecs를 지원하지 않습니다. Chrome/Edge를 사용해주세요.');
+
+        mp.results = {};
+        const total = mp.list.length;
+        let mp4Fail = 0;
+        document.getElementById('mp-result-wrap').classList.remove('hidden');
+        document.getElementById('mp-results').innerHTML = '<p class="text-[11px] text-slate-400 col-span-full">생성 중입니다...</p>';
+
+        for (let i = 0; i < total; i++) {
+          const card = mp.list[i];
+          const cat = mp.catMap[card.category] || {};
+          mpProgress(Math.round(i / total * 100), '(' + (i + 1) + '/' + total + ') ' + card.title + ' 카드 렌더링 중...');
+          const canvas = mpDrawCard(card, cat.color || '#1d4ed8');
+          const pngBlob = await canvasToBlob(canvas, 'image/png');
+          let mp4Blob = null;
+          try {
+            mpProgress(Math.round((i + 0.5) / total * 100), '(' + (i + 1) + '/' + total + ') ' + card.title + ' MP4 인코딩 중...');
+            mp4Blob = await mpEncodeMp4(canvas, seconds);
+          } catch (e) {
+            mp4Fail++;
+            console.warn('MP4 encode failed:', card.title, e);
+          }
+          mp.results[card.id] = { canvas, pngBlob, mp4Blob, card };
+        }
+        mpProgress(100, '완료!');
+        mpRenderResults(mp4Fail);
+        document.getElementById('mp-zip-btn').classList.remove('hidden');
+        lucide.createIcons();
+      } catch (e) {
+        mpShowNote('⚠️ ' + e.message);
+      }
+    };
+
+    function mpRenderResults(mp4Fail) {
+      const grid = document.getElementById('mp-results');
+      grid.innerHTML = mp.list.map((c, i) => {
+        const r = mp.results[c.id];
+        const thumb = r && r.canvas ? mpThumbDataUrl(r.canvas) : '';
+        const mp4ok = r && r.mp4Blob;
+        return '<div class="rounded-xl overflow-hidden border border-dark-border bg-dark-surface">' +
+          '<img src="' + thumb + '" class="w-full aspect-[9/16] object-cover" alt="' + c.title + '">' +
+          '<div class="p-2 space-y-1.5">' +
+          '<p class="text-[10px] font-bold text-white truncate">' + (i + 1) + '. ' + c.title + '</p>' +
+          '<div class="flex gap-1.5">' +
+          '<button onclick="mpDownloadResult(\'' + c.id + '\',\'png\')" class="flex-1 py-1 rounded-md bg-dark-border/60 text-[10px] font-bold text-slate-300 hover:bg-dark-border transition">PNG</button>' +
+          (mp4ok
+            ? '<button onclick="mpDownloadResult(\'' + c.id + '\',\'mp4\')" class="flex-1 py-1 rounded-md bg-fuchsia-500/20 text-fuchsia-300 hover:bg-fuchsia-500/30 text-[10px] font-bold transition">MP4</button>'
+            : '<button disabled class="flex-1 py-1 rounded-md bg-dark-border/40 text-slate-600 text-[10px] font-bold transition">MP4 불가</button>') +
+          '</div></div></div>';
+      }).join('');
+      if (mp4Fail > 0) mpShowNote('⚠️ ' + mp4Fail + '개는 MP4 인코딩이 지원되지 않아 PNG만 생성했습니다. (Chrome/Edge 권장)');
+    }
+
+    window.mpDownloadResult = function (id, kind) {
+      const r = mp.results[id];
+      if (!r) return;
+      const blob = kind === 'png' ? r.pngBlob : r.mp4Blob;
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = mpFileName(id, kind);
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
+    };
+
+    function mpFileName(id, kind) {
+      const card = (mp.list.find(c => c.id === id) || (mp.results[id] && mp.results[id].card) || {});
+      return (mpSlug(card.title || id) || id) + '.' + (kind === 'png' ? 'png' : 'mp4');
+    }
+    function mpSlug(s) {
+      return String(s || '').trim().replace(/[\\/:*?"<>|]+/g, '').replace(/\s+/g, '_').slice(0, 40);
+    }
+
+    async function mpLoadZip() {
+      if (window.JSZip) return JSZip;
+      await mpLoadScript('https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js');
+      return JSZip;
+    }
+
+    window.mpDownloadZip = async function () {
+      try {
+        const JSZip = await mpLoadZip();
+        mpProgress(0, 'ZIP 생성 중...');
+        const zip = new JSZip();
+        const pngFolder = zip.folder('png');
+        const mp4Folder = zip.folder('mp4');
+        mp.list.forEach((c, i) => {
+          const r = mp.results[c.id];
+          if (!r) return;
+          pngFolder.file((i + 1) + '_' + mpSlug(c.title) + '.png', r.pngBlob);
+          if (r.mp4Blob) mp4Folder.file((i + 1) + '_' + mpSlug(c.title) + '.mp4', r.mp4Blob);
+        });
+        zip.file('업로드일정표.csv', mpCsvText());
+        const blob = await zip.generateAsync({ type: 'blob' }, meta => mpProgress(Math.round(meta.percent), 'ZIP 압축 중...'));
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'mogieg_cards_' + Date.now() + '.zip';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 3000);
+        mpProgress(100, 'ZIP 다운로드 완료');
+      } catch (e) {
+        mpShowNote('⚠️ ' + e.message);
+      }
+    };
+
+    window.mpMakeSchedule = async function () {
+      try {
+        if (mp.list.length === 0) { await mpBuildList(); if (mp.list.length === 0) return; }
+        const startEl = document.getElementById('mp-sched-start');
+        if (!startEl.value) {
+          const d = new Date(Date.now() + 86400000);
+          startEl.value = d.toISOString().slice(0, 10);
+        }
+        document.getElementById('mp-sched-wrap').classList.remove('hidden');
+        mpBuildScheduleTable();
+        lucide.createIcons();
+      } catch (e) { mpShowNote('⚠️ ' + e.message); }
+    };
+
+    function mpTagFor(card) {
+      const cat = mp.catMap[card.category] || {};
+      return ['#모기에그', '#' + (cat.label || '').replace(/[··\s]/g, ''), '#40대', '#50대', '#60대', '#노후준비'];
+    }
+
+    window.mpBuildScheduleTable = function () {
+      const start = document.getElementById('mp-sched-start').value;
+      const time = document.getElementById('mp-sched-time').value || '18:00';
+      const perDay = Math.max(1, Math.min(10, parseInt(document.getElementById('mp-sched-perday').value, 10) || 2));
+      if (!start) { mpShowNote('시작일을 선택해주세요.'); return; }
+      const rows = [];
+      const d = new Date(start + 'T00:00:00');
+      mp.list.forEach((c, i) => {
+        const day = new Date(d.getTime() + Math.floor(i / perDay) * 86400000);
+        const iso = day.toISOString().slice(0, 10);
+        rows.push({
+          no: i + 1,
+          when: iso + ' ' + time,
+          title: c.title,
+          desc: '40~60대가 꼭 알아야 할 "' + c.title + '"을 공신력 있는 통계로 정리했습니다. 출처: ' + c.source,
+          tags: mpTagFor(c).join(' '),
+          file: (i + 1) + '_' + mpSlug(c.title) + '.mp4',
+          source: c.source
+        });
+      });
+      mp.scheduleRows = rows;
+      const tbody = document.querySelector('#mp-sched-table tbody');
+      tbody.innerHTML = rows.map(r =>
+        '<tr class="border-t border-dark-border">' +
+        '<td class="py-2.5 px-3 text-slate-500">' + r.no + '</td>' +
+        '<td class="py-2.5 px-3 whitespace-nowrap">' + r.when + '</td>' +
+        '<td class="py-2.5 px-3 font-semibold text-white">' + r.title + '</td>' +
+        '<td class="py-2.5 px-3 text-slate-400">' + r.tags + '</td>' +
+        '<td class="py-2.5 px-3 text-slate-500 font-mono">' + r.file + '</td>' +
+        '</tr>').join('');
+    };
+
+    function mpCsvText() {
+      const rows = mp.scheduleRows.length ? mp.scheduleRows : mp.list.map((c, i) => ({
+        no: i + 1, when: '', title: c.title, desc: c.subtitle, tags: mpTagFor(c).join(' '), file: (i + 1) + '_' + mpSlug(c.title) + '.mp4', source: c.source
+      }));
+      const esc = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const head = ['순번', '업로드일시', '제목', '설명', '해시태그', '파일명', '출처'];
+      const lines = [head.map(esc).join(',')];
+      rows.forEach(r => lines.push([r.no, r.when, r.title, r.desc, r.tags, r.file, r.source].map(esc).join(',')));
+      return '\uFEFF' + lines.join('\r\n');
+    }
+
+    window.mpDownloadCsv = function () {
+      if (mp.list.length === 0) { mpShowNote('먼저 주제를 구성해주세요.'); return; }
+      if (mp.scheduleRows.length === 0) mpBuildScheduleTable();
+      const blob = new Blob([mpCsvText()], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'mogieg_업로드일정표.csv';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
+    };
+
+    mpLoadData().catch(e => console.warn('대량생산 데이터 로드 실패:', e));
+  })();
   </script>
 </body>
 </html>

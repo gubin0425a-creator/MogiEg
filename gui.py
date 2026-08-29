@@ -1,92 +1,132 @@
-# gui.py
 # -*- coding: utf-8 -*-
+"""
+MogiEgg 데스크톱 프로그램 런처
 
-import tkinter as tk
-import threading
-import webbrowser
-import time
-import sys
+- 로컬 정적 서버(127.0.0.1)를 백그라운드 스레드로 실행
+- 기본 브라우저로 스튜디오 자동 오픈
+- tkinter 제어판 제공 (GUI 불가 환경에서는 콘솔 모드로 자동 전환)
+
+빌드(Windows):
+    pip install pyinstaller
+    pyinstaller --clean --noconfirm mogieg.spec
+    -> dist\\MogiEgg.exe
+"""
 import os
-from app import app
+import sys
+import socket
+import threading
+import time
+import webbrowser
 
-def start_flask():
-    # Run flask locally on port 8501
-    app.run(host='127.0.0.1', port=8501, debug=False)
 
-def open_browser():
-    webbrowser.open('http://127.0.0.1:8501')
+def find_free_port(start=8501, tries=50):
+    for p in range(start, start + tries):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            try:
+                s.bind(('127.0.0.1', p))
+                return p
+            except OSError:
+                continue
+    return start
+
+
+def start_server(host='127.0.0.1', port=None):
+    """서버를 백그라운드로 실행하고 (httpd, 실제포트) 반환."""
+    from server import create_server
+    if port is None:
+        port = find_free_port()
+    httpd = create_server(host, port)
+    t = threading.Thread(target=httpd.serve_forever, daemon=True)
+    t.start()
+    return httpd, port
+
+
+def main():
+    httpd, port = start_server('127.0.0.1')
+    url = 'http://127.0.0.1:%d' % port
+    print('🥚 MogiEgg 스튜디오 실행 중 -> %s' % url)
+
+    try:
+        import tkinter as tk
+    except Exception:
+        # GUI 불가 환경(서버/헤드리스): 브라우저만 열고 콘솔 대기
+        try:
+            webbrowser.open(url)
+        except Exception:
+            pass
+        print('(GUI 없이 콘솔 모드로 실행 중 — Ctrl+C 로 종료)')
+        try:
+            while True:
+                time.sleep(3600)
+        except KeyboardInterrupt:
+            print('종료합니다.')
+        return
+
+    BG = '#0a0e14'
+    CARD = '#121720'
+    SURFACE = '#181f2a'
+    FG = '#e5e7eb'
+    MUTED = '#94a3b8'
+    BRAND = '#10b981'
+    FONT = ('Malgun Gothic', 10)
+
+    root = tk.Tk()
+    root.title('모기에그 (MogiEgg) 스튜디오')
+    root.geometry('440x250')
+    root.resizable(False, False)
+    root.configure(bg=BG)
+
+    try:
+        root.iconphoto(False, tk.PhotoImage(file=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'mascot.png')))
+    except Exception:
+        pass
+
+    # 상단
+    tk.Label(root, text='🥚', bg=BG, font=('Malgun Gothic', 28)).pack(pady=(18, 2))
+    tk.Label(root, text='모기에그 (MogiEgg)', bg=BG, fg=FG, font=('Malgun Gothic', 16, 'bold')).pack()
+    tk.Label(root, text='우리만의 AI 숏폼 & 마케팅 스튜디오', bg=BG, fg=MUTED, font=FONT).pack(pady=(0, 10))
+
+    # 상태 바
+    status = tk.Label(
+        root,
+        text='✅ 스튜디오 실행 중 — %s' % url,
+        bg=CARD, fg=BRAND,
+        font=('Malgun Gothic', 10, 'bold'),
+        padx=16, pady=8,
+    )
+    status.pack(fill='x', padx=24)
+
+    # 버튼
+    btns = tk.Frame(root, bg=BG)
+    btns.pack(pady=14)
+
+    def open_studio():
+        webbrowser.open(url)
+
+    def quit_app():
+        try:
+            httpd.shutdown()
+        except Exception:
+            pass
+        root.destroy()
+
+    tk.Button(btns, text='🌐 스튜디오 열기', command=open_studio,
+              bg=BRAND, fg='#04120c', activebackground='#0d9b6e', activeforeground='#04120c',
+              relief='flat', font=('Malgun Gothic', 10, 'bold'), padx=18, pady=8,
+              cursor='hand2').pack(side='left', padx=6)
+    tk.Button(btns, text='🛑 종료', command=quit_app,
+              bg=SURFACE, fg=FG, activebackground='#26303f', activeforeground=FG,
+              relief='flat', font=('Malgun Gothic', 10), padx=18, pady=8,
+              cursor='hand2').pack(side='left', padx=6)
+
+    tk.Label(root, text='브라우저에서 실행됩니다 · 종료하면 스튜디오도 함께 꺼집니다',
+             bg=BG, fg='#64748b', font=('Malgun Gothic', 9)).pack(side='bottom', pady=(0, 12))
+
+    # 브라우저 자동 오픈
+    root.after(800, open_studio)
+    root.protocol('WM_DELETE_WINDOW', quit_app)
+    root.mainloop()
+
 
 if __name__ == '__main__':
-    # Start Flask server on a background daemon thread
-    t = threading.Thread(target=start_flask)
-    t.daemon = True
-    t.start()
-    
-    # Wait 1.2 seconds for Flask to initialize
-    time.sleep(1.2)
-    
-    # Auto-open browser
-    open_browser()
-    
-    # Build TKinter Control Dashboard
-    root = tk.Tk()
-    root.title("K-Beauty Global Lister Pro")
-    root.geometry("420x220")
-    root.configure(bg="#0a0a0c")
-    root.resizable(False, False)
-    
-    # Title Label
-    title_lbl = tk.Label(
-        root, 
-        text="🧴 K-Beauty Global Lister Pro", 
-        fg="#38bdf8", 
-        bg="#0a0a0c", 
-        font=("Malgun Gothic", 16, "bold")
-    )
-    title_lbl.pack(pady=20)
-    
-    # Status Label
-    status_lbl = tk.Label(
-        root, 
-        text="상태: 로컬 서버 정상 작동 중 (포트 8501)", 
-        fg="#10b981", 
-        bg="#0a0a0c", 
-        font=("Malgun Gothic", 10)
-    )
-    status_lbl.pack(pady=5)
-    
-    # Info Label
-    info_lbl = tk.Label(
-        root, 
-        text="이 창을 닫으면 프로그램(서버)이 완전히 종료됩니다.", 
-        fg="#71717a", 
-        bg="#0a0a0c", 
-        font=("Malgun Gothic", 9)
-    )
-    info_lbl.pack(pady=5)
-    
-    # Action Button
-    btn_open = tk.Button(
-        root, 
-        text="대시보드 브라우저 열기", 
-        command=open_browser, 
-        fg="#ffffff", 
-        bg="#2563eb", 
-        activebackground="#1d4ed8", 
-        activeforeground="#ffffff", 
-        font=("Malgun Gothic", 10, "bold"), 
-        relief="flat", 
-        bd=0, 
-        width=25, 
-        height=2,
-        cursor="hand2"
-    )
-    btn_open.pack(pady=15)
-    
-    # Exit cleanly on window closing
-    def on_closing():
-        root.destroy()
-        os._exit(0)
-        
-    root.protocol("WM_DELETE_WINDOW", on_closing)
-    root.mainloop()
+    main()

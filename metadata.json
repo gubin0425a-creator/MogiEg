@@ -1,0 +1,6 @@
+{
+  "name": "MogiEgg - AI Short-form & Marketing Studio",
+  "description": "AI-powered marketing and short-form video content studio for YouTube channels, 3-second hook scripts, and verified card news production.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
